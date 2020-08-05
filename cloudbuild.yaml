@@ -1,9 +1,9 @@
 steps:
 
 # mave build
-- name: maven:3.6.0-jdk-11-slim
-  entrypoint: 'mvn'
-  args: ['clean', 'install', '-DskipTests']
+#- name: maven:3.6.0-jdk-11-slim
+#  entrypoint: 'mvn'
+#  args: ['clean', 'install', '-DskipTests']
 
 # Copy Maven dependencies to volume mavenrepo
 - name: gcr.io/cloud-builders/gsutil
