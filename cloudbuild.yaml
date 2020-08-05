@@ -7,6 +7,11 @@ steps:
 #  - -c
 #  - 'pip install flask && python test_app.py -v'
 
+# mave build
+- name: maven:3.6.0-jdk-11-slim
+  entrypoint: 'mvn'
+  args: ['clean', 'install', '-DskipTests']
+    
 # This step builds the container image.
 - name: 'gcr.io/cloud-builders/docker'
   id: Build
