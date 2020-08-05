@@ -10,7 +10,7 @@ steps:
   volumes:
     - name: 'mavenrepo'
       path: '/root/.m2'
-  args: ['cp', '-r', 'https://console.cloud.google.com/storage/browser/com-ptps-mavenrepo', '/root/.m2']
+  args: ['cp', '-r', 'gs://com-ptps-mavenrepo', '/root/.m2']
 # Run the Maven build
 - name: maven:3.6.0-jdk-11-slim
   volumes:
@@ -23,7 +23,7 @@ steps:
   volumes:
     - name: 'mavenrepo'
       path: '/root/.m2'
-  args: ['cp', '-r', '/root/.m2', 'https://console.cloud.google.com/storage/browser/com-ptps-mavenrepo'] 
+  args: ['cp', '-r', '/root/.m2', 'gs://com-ptps-mavenrepo'] 
 
 # This step builds the container image.
 #- name: 'gcr.io/cloud-builders/docker'
