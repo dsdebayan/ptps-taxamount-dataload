@@ -1,25 +1,38 @@
 steps:
-# This step runs the unit tests on the app
-#- name: 'python:3.7-slim'
-#  id: Test
-#  entrypoint: /bin/sh
-#  args:
-#  - -c
-#  - 'pip install flask && python test_app.py -v'
 
 # mave build
 - name: maven:3.6.0-jdk-11-slim
   entrypoint: 'mvn'
   args: ['clean', 'install', '-DskipTests']
-    
+
+# Copy Maven dependencies to volume mavenrepo
+- name: gcr.io/cloud-builders/gsutil
+  volumes:
+    - name: 'mavenrepo'
+      path: '/root/.m2'
+  args: ['cp', '-r', 'gs://com-ptps-mavenrepo', '/root/.m2']
+# Run the Maven build
+- name: maven:3.6.0-jdk-11-slim
+  volumes:
+    - name: 'mavenrepo'
+      path: '/root/.m2'
+  entrypoint: 'mvn'
+  args: ['clean', 'install', '-DskipTests']
+# Preserve the Maven dependencies into the bucket
+- name: gcr.io/cloud-builders/gsutil
+  volumes:
+    - name: 'mavenrepo'
+      path: '/root/.m2'
+  args: ['cp', '-r', '/root/.m2', 'gs://com-ptps-mavenrepo'] 
+
 # This step builds the container image.
-- name: 'gcr.io/cloud-builders/docker'
-  id: Build
-  args:
-  - 'build'
-  - '-t'
-  - 'gcr.io/$PROJECT_ID/ptps-taxamount-dataload:$SHORT_SHA'
-  - '.'
+#- name: 'gcr.io/cloud-builders/docker'
+#  id: Build
+#  args:
+#  - 'build'
+#  - '-t'
+#  - 'gcr.io/$PROJECT_ID/ptps-taxamount-dataload:$SHORT_SHA'
+#  - '.'
 
 # This step pushes the image to Container Registry
 # The PROJECT_ID and SHORT_SHA variables are automatically
