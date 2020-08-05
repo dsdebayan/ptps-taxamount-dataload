@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /taxamount-dataload/*
+        backend:
+          serviceName: taxamount-dataload
+          servicePort: 8001   
+      - path: /payment-settlement/*
+        backend:
+          serviceName: payment-settlement
+          servicePort: 8002
+      - path: /customer-reporting/*
+        backend:
+          serviceName: customer-reporting
+          servicePort: 8003         
+#      - path: /currency-conversion/*
+#        backend:
+#          serviceName: currency-conversion
+#          servicePort: 8100
