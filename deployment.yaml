@@ -22,7 +22,7 @@ spec:
         app: taxamount-dataload
     spec:
       containers:
-      - image: dsdebayan/taxamount-dataload:0.0.3-RELEASE #CHANGE
+      - image: dsdebayan/taxamount-dataload:0.0.1-RELEASE #CHANGE
         imagePullPolicy: IfNotPresent
         name: taxamount-dataload
         env:
