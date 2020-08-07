@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: mysql
   name: mysql
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - name: "3306"
     port: 3306

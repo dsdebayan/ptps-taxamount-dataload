@@ -22,6 +22,7 @@ import com.google.cloud.storage.StorageOptions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ptps.microservices.taxamountDataloadService.resource.TaxPaymentOrder;
+
 import com.ptps.microservices.taxamountDataloadService.resource.TaxPaymentOrderRepository;
 import com.ptps.microservices.taxamountDataloadService.util.environment.CSVHelper;
 
@@ -30,7 +31,7 @@ public class TaxamountDataloadServiceApplication {
 
 
 	private static final Log LOGGER = LogFactory.getLog(TaxamountDataloadServiceApplication.class);
-	
+
 	@Autowired
 	private TaxPaymentOrderRepository repository;
 
@@ -38,41 +39,42 @@ public class TaxamountDataloadServiceApplication {
 		SpringApplication.run(TaxamountDataloadServiceApplication.class, args);
 	}
 
-	@Bean
-	public PubSubInboundChannelAdapter messageChannelAdapter(
-			@Qualifier("ptpsInputChannel") MessageChannel inputChannel,
+
+	@Bean 
+	public PubSubInboundChannelAdapter messageChannelAdapter(@Qualifier("ptpsInputChannel") MessageChannel inputChannel,
 			PubSubTemplate pubSubTemplate) {
-		PubSubInboundChannelAdapter adapter =
-				new PubSubInboundChannelAdapter(pubSubTemplate, "ptpsSub");
+
+		PubSubInboundChannelAdapter adapter = new PubSubInboundChannelAdapter(pubSubTemplate, "ptpsSub");
 		adapter.setOutputChannel(inputChannel);
-		return adapter;
+		return adapter; 
+
 	}
-	
-	@Bean
-	public MessageChannel myInputChannel() {
-		return new DirectChannel();
-	}
-	
+
+	@Bean public 
+	MessageChannel myInputChannel() {
+		return new DirectChannel(); }
+
 	@ServiceActivator(inputChannel = "ptpsInputChannel")
-	public void messageReceiver(String payload) {
-		JsonObject jsonObject = new JsonParser().parse(payload).getAsJsonObject();
+	public void	messageReceiver(String payload) { 
+		JsonObject jsonObject = new JsonParser().parse(payload).getAsJsonObject(); 
 		String file = jsonObject.get("name").getAsString();
-		Storage storage = StorageOptions.getDefaultInstance().getService();
-		GoogleStorageResource gcsFile = new GoogleStorageResource(storage, "gs://ptps/" + file, false);
+		Storage storage =
+				StorageOptions.getDefaultInstance().getService();
+		GoogleStorageResource
+		gcsFile = new GoogleStorageResource(storage, "gs://ptps/" + file, false);
 		String message;
-		try {
-			try {
-				List<TaxPaymentOrder> taxPaymentOrders = CSVHelper.csvToOrder(gcsFile.getInputStream());
-				repository.saveAll(taxPaymentOrders);
-			} catch (IOException e) {
-				throw new RuntimeException("fail to store csv data: " + e.getMessage());
-			}
-			message = "Uploaded the file successfully: " + gcsFile.getFilename();
-			LOGGER.info(message);
+		try { 
+			try { List<TaxPaymentOrder> taxPaymentOrders = CSVHelper.csvToOrder(gcsFile.getInputStream());
+			repository.saveAll(taxPaymentOrders); 
+			} catch (IOException e) { 
+				throw new
+				RuntimeException("fail to store csv data: " + e.getMessage()); 
+			} message =	"Uploaded the file successfully: " + gcsFile.getFilename();
+			LOGGER.info(message); 
 		} catch (Exception e) {
 			message = "Could not upload the file: " + gcsFile.getFilename() + "!";
 			LOGGER.error(message);
-		}
-		LOGGER.info("Message arrived! Payload: " + payload);
+		} LOGGER.info("Message arrived! Payload: " + payload);
 	}
+
 }
