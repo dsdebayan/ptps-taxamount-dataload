@@ -22,19 +22,13 @@ spec:
         app: taxamount-dataload
     spec:
       containers:
-#      - image: dsdebayan/taxamount-dataload:0.0.1-RELEASE #CHANGE
-      - image: gcr.io/fine-chariot-285305/ptps-taxamount-dataload:0.0.1-RELEASE #CHANGE
+      - image: dsdebayan/taxamount-dataload:0.0.1-RELEASE #CHANGE
+#      - image: gcr.io/fine-chariot-285305/ptps-taxamount-dataload:0.0.1-RELEASE #CHANGE
         imagePullPolicy: IfNotPresent
         name: taxamount-dataload
         env:
-#          - name: CURRENCY_EXCHANGE_URI
-#            value: http://currency-exchange
-#          - name: SPRING_CLOUD_GCP_TRACE_ENABLED
-#            value: "true"
           - name: RDS_HOSTNAME
             value: mysql
-#          - name: SPRING_PROFILES_ACTIVE
-#            value: kubernetes
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 ---
