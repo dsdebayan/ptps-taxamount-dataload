@@ -22,8 +22,8 @@ spec:
         app: taxamount-dataload
     spec:
       containers:
-      - image: dsdebayan/taxamount-dataload:0.0.1-RELEASE #CHANGE
-#      - image: gcr.io/fine-chariot-285305/ptps-taxamount-dataload:0.0.1-RELEASE #CHANGE
+#      - image: dsdebayan/taxamount-dataload:0.0.1-RELEASE #CHANGE
+      - image: gcr.io/fine-chariot-285305/ptps-taxamount-dataload:0.0.1-RELEASE #CHANGE
         imagePullPolicy: IfNotPresent
         name: taxamount-dataload
         env:
@@ -54,4 +54,4 @@ spec:
   selector:
     app: taxamount-dataload
   sessionAffinity: None #CHANGE
-  type: NodePort
+  type: LoadBalancer
