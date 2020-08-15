@@ -21,6 +21,8 @@ import com.google.cloud.storage.StorageOptions;
 import com.ptps.microservices.taxamountDataloadService.util.environment.CSVHelper;
 import com.ptps.microservices.taxamountDataloadService.util.environment.ResponseMessage;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 public class TxamountDataloadController {
 
@@ -31,11 +33,13 @@ public class TxamountDataloadController {
 
 
 	@GetMapping("/")
+	@ApiOperation(value = "Health Check")
 	public String imHealthy() {
 		return "{healthy:true}";
 	}
 
 	@GetMapping("/gcs/{file}")
+	@ApiOperation(value = "Load Tax Amount File from GCS")
 	public ResponseEntity<ResponseMessage> readGcsFile(@PathVariable String file) throws IOException {
 		Storage storage = StorageOptions.getDefaultInstance().getService();
 		GoogleStorageResource gcsFile = new GoogleStorageResource(storage, "gs://ptps/" + file, false);
@@ -58,6 +62,7 @@ public class TxamountDataloadController {
 
 
 	@GetMapping("/taxamount-dataload/all")
+	@ApiOperation(value = "Retrivev Loaded Tax Amount")
 	public List<TaxPaymentOrder> retrieveAllOrders() {
 
 		List<TaxPaymentOrder> taxPaymentOrderList = repository.findAll();
@@ -67,6 +72,7 @@ public class TxamountDataloadController {
 	}
 
 	@PostMapping("/taxamount-dataload/upload")
+	@ApiOperation(value = "Upoad Tax Amount File")
 	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
 		String message = "";
 
