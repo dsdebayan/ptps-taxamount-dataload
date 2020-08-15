@@ -48,4 +48,4 @@ spec:
   selector:
     app: taxamount-dataload
   sessionAffinity: None #CHANGE
-  type: LoadBalancer
+  type: NodePort
